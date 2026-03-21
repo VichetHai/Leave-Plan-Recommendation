@@ -1,23 +1,21 @@
 services:
 
   db:
-    image: postgres:17
+    image: container-registry.oracle.com/database/free:latest
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
-      retries: 5
-      start_period: 30s
+      test: ["CMD-SHELL", "/opt/oracle/checkDBStatus.sh"]
+      interval: 30s
+      retries: 10
+      start_period: 120s
       timeout: 10s
     volumes:
-      - app-db-data:/var/lib/postgresql/data/pgdata
+      - app-db-data:/opt/oracle/oradata
     env_file:
       - .env
     environment:
-      - PGDATA=/var/lib/postgresql/data/pgdata
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
-      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
-      - POSTGRES_DB=${POSTGRES_DB?Variable not set}
+      - ORACLE_PWD=${ORACLE_PWD?Variable not set}
+      - ORACLE_DATABASE=${ORACLE_DATABASE:-FREEPDB1}
 
   adminer:
     image: adminer
@@ -68,11 +66,11 @@ services:
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
       - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL}
-      - POSTGRES_SERVER=db
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+      - ORACLE_SERVER=db
+      - ORACLE_PORT=${ORACLE_PORT}
+      - ORACLE_DATABASE=${ORACLE_DATABASE}
+      - ORACLE_USER=${ORACLE_USER?Variable not set}
+      - ORACLE_PWD=${ORACLE_PWD?Variable not set}
       - SENTRY_DSN=${SENTRY_DSN}
 
   backend:
@@ -101,11 +99,11 @@ services:
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
       - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL}
-      - POSTGRES_SERVER=db
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+      - ORACLE_SERVER=db
+      - ORACLE_PORT=${ORACLE_PORT}
+      - ORACLE_DATABASE=${ORACLE_DATABASE}
+      - ORACLE_USER=${ORACLE_USER?Variable not set}
+      - ORACLE_PWD=${ORACLE_PWD?Variable not set}
       - SENTRY_DSN=${SENTRY_DSN}
 
     healthcheck:
