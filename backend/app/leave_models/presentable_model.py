@@ -5,7 +5,7 @@ from sqlmodel import SQLModel
 
 class UserPresentable(SQLModel):
     id: uuid.UUID
-    full_name: str
+    full_name: str | None
     email: str
 
 class TeamPresentable(SQLModel):
