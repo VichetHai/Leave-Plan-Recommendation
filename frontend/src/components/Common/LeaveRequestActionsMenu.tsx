@@ -1,7 +1,7 @@
 import { Button, IconButton } from "@chakra-ui/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { BsThreeDotsVertical } from "react-icons/bs"
-import DeleteLeaveRequest from "../LeaveRequest/DeleteLeaveRequest"
+
 import EditLeaveRequest from "../LeaveRequest/EditLeaveRequest"
 import { MenuContent, MenuRoot, MenuTrigger } from "../ui/menu"
 import { OpenAPI } from "@/client/core/OpenAPI"
@@ -112,7 +112,7 @@ export const LeaveRequestActionsMenu = ({ leaveRequest, disabled }: LeaveRequest
     const status = leaveRequest.status
     const isDraft = status === "draft"
     const isPending = status === "pending"
-    const isApprovedOrRejected = status === "approved" || status === "rejected"
+
 
     return (
         <MenuRoot>
@@ -122,11 +122,10 @@ export const LeaveRequestActionsMenu = ({ leaveRequest, disabled }: LeaveRequest
                 </IconButton>
             </MenuTrigger>
             <MenuContent>
-                {/* Draft: Edit, Delete, Submit */}
+                {/* Draft: Edit, Submit */}
                 {isDraft && (
                     <>
                         <EditLeaveRequest leaveRequest={leaveRequest} />
-                        <DeleteLeaveRequest id={leaveRequest.id} />
                         <Button variant="ghost" size="sm" onClick={() => submitMutation.mutate()} disabled={submitMutation.isPending}>
                             Submit
                         </Button>
@@ -142,10 +141,6 @@ export const LeaveRequestActionsMenu = ({ leaveRequest, disabled }: LeaveRequest
                             Reject
                         </Button>
                     </>
-                )}
-                {/* Approved/Rejected: Delete only */}
-                {isApprovedOrRejected && (
-                    <DeleteLeaveRequest id={leaveRequest.id} />
                 )}
             </MenuContent>
         </MenuRoot>
