@@ -72,7 +72,7 @@ class RecommendLeavePlanRouter:
         balance_statement = select(LeaveBalance).where(
             (LeaveBalance.leave_type_id == leave_type.id) &
             (LeaveBalance.owner_id == self.current_user.id) &
-            (LeaveBalance.year == self.year)
+            (LeaveBalance.year == str(self.year))
         )
         leave_balance = session.exec(balance_statement).first()
         available_balance = leave_balance.available_balance if leave_balance else 0
@@ -135,7 +135,7 @@ class RecommendLeavePlanRouter:
             LeavePlanDetail.leave_plan_id == LeavePlanRequest.id
         ).where(
             (LeavePlanRequest.team_id == self.current_user.team_id) &
-            (LeavePlanRequest.year == self.year)  # filter by year
+            (LeavePlanRequest.year == str(self.year))  # filter by year
         ).group_by(
             LeavePlanDetail.leave_date
         ).order_by(
